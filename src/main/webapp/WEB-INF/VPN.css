@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body Styles */
+  /* Body Styles with Background Image */
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('vpn bg.jpg'); /* Path to the image */
+    background-size: cover; /* Cover the entire background */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent background repetition */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+  
+  /* Main Authentication Container */
+  .auth-container {
+    background-color: #fff; /* White background */
+    padding: 40px; /* Padding around the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    width: 350px; /* Fixed width for the form */
+    text-align: center; /* Center the text */
+  }
+  
+  /* Header Styling */
+  h1 {
+    margin-bottom: 10px; /* Space below the title */
+    color: #007bff; /* Blue color */
+    font-size: 28px; /* Title font size */
+  }
+  
+  /* Brand name styling */
+  h1 .brand-name {
+    color: #0069d9; /* Slightly darker blue */
+    font-weight: bold; /* Make the brand name bold */
+  }
+  
+  /* Tab Button Styles (Login/Signup Switcher) */
+  .tabs {
+    display: flex; /* Flexbox layout for buttons */
+    justify-content: space-evenly; /* Evenly spaced buttons */
+    margin-bottom: 30px; /* Space below the tabs */
+  }
+  
+  /* Tab Button (Login/Signup) */
+  .tab-button {
+    background-color: #f1f1f1; /* Light gray background */
+    border: 1px solid #ddd; /* Light border color */
+    padding: 10px 20px; /* Padding inside the button */
+    width: 50%; /* Buttons take up half the width */
+    cursor: pointer; /* Pointer cursor for clickable buttons */
+    font-size: 16px; /* Font size for the text */
+    border-radius: 5px; /* Rounded corners for buttons */
+  }
+  
+  /* Active Tab Button Styles */
+  .tab-button.active {
+    background-color: #007bff; /* Blue background for active button */
+    color: white; /* White text on active button */
+    border-color: #007bff; /* Matching border color */
+  }
+  
+  /* Form Container Styles */
+  .form-container {
+    display: none; /* Hidden by default; shown when selected */
+  }
+  
+  /* Subheading Styling */
+  h2 {
+    margin-bottom: 20px; /* Space below the heading */
+    color: #333; /* Dark gray text color */
+  }
+  
+  /* Input Group Styles */
+  .input-group {
+    margin-bottom: 20px; /* Space below each input field */
+    text-align: left; /* Align labels to the left */
+  }
+  
+  /* Label Styling for Inputs */
+  .input-group label {
+    font-size: 14px; /* Smaller font for labels */
+    color: #555; /* Dark gray label color */
+  }
+  
+  /* Input Field Styling */
+  .input-group input {
+    width: 100%; /* Full width of the container */
+    padding: 10px; /* Padding inside input fields */
+    margin-top: 5px; /* Space between label and input */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px; /* Rounded corners for inputs */
+    font-size: 14px; /* Input font size */
+  }
+  
+  /* Focused Input Field Styling (When User Clicks) */
+  .input-group input:focus {
+    border-color: #007bff; /* Blue border when focused */
+    outline: none; /* Remove the default outline */
+  }
+  
+  /* Submit Button Styling */
+  .btn {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border: none; /* Remove default border */
+    padding: 12px; /* Padding inside button */
+    width: 100%; /* Button takes full width */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 16px; /* Button text size */
+  }
+  
+  /* Button Hover Effect */
+  .btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  /* Responsive Styles for Smaller Screens */
+  @media (max-width: 400px) {
+    .auth-container {
+      width: 90%; /* Container takes up 90% of screen width */
+      padding: 20px; /* Less padding on smaller screens */
+    }
+  
+    .tab-button {
+      padding: 8px; /* Smaller padding on buttons */
+    }
+  }
+  
