@@ -1,4 +1,4 @@
-package com.user.dao;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,65 +8,69 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.user.model.User;
+import model.User;
 
-public class userDAO {
+public class UserDAO {
 	
-	
-	private String jdbcURL="jdbc:mysql://localhost:30006/VPNProfiles";
+	private String jdbcURL="jdbc:mysql://localhost:3306/userdb";
 	private String jdbcUserName="root";
 	private String jdbcPassword="root";
 	
+	private static final String INSERT_USERS_SQL="INSERT INTO users"+"(uname,email,country,passwd) VALUES "+"(?,?,?,?);";
+w	private static final String SELECT_USER_BY_ID="SELECT * FROM users where id=?;";
+	private static final String SELECT_ALL_USERS="select * from users;";
+	private static final String DELETE_USERS_SQL="delete from users where id=?;";
+	private static final String UPDATE_USERS_SQL="update users set uname=?, email=?, country=? where id=?;";
 	
-	private static final String INSERT_USERS_SQL="INSERT INTO USERS"+"(uname, email, location,passwd) VALUES"+"(?,?,?,?);";
-	private static final String SELECT_USER_BY_ID ="SELECT * FROM USERS WHERE ID=?;";
-	private static final String SELECT_ALL_USERS="SELECT * FROM USERS;";
-	private static final String DELETE_USERS_SQL="DELETE FROM USERS WHERE ID=?;";
-	private static final String UPDATE_USERS_SQL="UPDATE USERS SET UNAME=?, EMAIL=?,LOCATION=?,PASSWORD=?;";
-	public userDAO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	
+	public UserDAO() {
+
+
+	} 
+	//database connection
 	public Connection getConnection()
 	{
-		
 		Connection connection=null;
 		
 		try
 		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection=DriverManager.getConnection(jdbcURL,jdbcUserName, jdbcPassword);
 			
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection=DriverManager.getConnection(jdbcURL, jdbcUserName, jdbcPassword);
 		}
-		
-		catch(SQLException | ClassNotFoundException e) {
+		catch(SQLException e)
+		{
 			e.printStackTrace();
 		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
+		
 		return connection;
 	}
 	
 	
 	public void insertUser(User user)
 	{
-		userDAO dao =new userDAO();
-		try(Connection connection = dao.getConnection())
+		UserDAO dao=new UserDAO();
+		try(Connection connection=dao.getConnection())
 		{
 			PreparedStatement preparedStatement=connection.prepareStatement(INSERT_USERS_SQL);
 			preparedStatement.setString(1, user.getName());
 			preparedStatement.setString(2, user.getEmail());
-			preparedStatement.setString(3, user.getLocation());
-			preparedStatement.setString(4,user.getPassword());
+			preparedStatement.setString(3, user.getCountry());
+			preparedStatement.setString(4, user.getPassword());
 			
-			preparedStatement.executeUpdate(); 
-					
-		
+			preparedStatement.executeUpdate();
 		}
-		catch(Exception e) {
+		catch(SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -74,29 +78,28 @@ public class userDAO {
 	
 	public User selectUser(int id)
 	{
-		
 		User user=new User();
-		userDAO dao =new userDAO();
-		
-		try(Connection connection=dao.getConnection() )
+		UserDAO dao=new UserDAO();
+		try(Connection connection=dao.getConnection())
 		{
 			PreparedStatement preparedStatement=connection.prepareStatement(SELECT_USER_BY_ID);
 			preparedStatement.setInt(1, id);
 			
-			
-			ResultSet resultSet=preparedStatement.executeQuery();
-			
+			ResultSet  resultSet=preparedStatement.executeQuery();
 			while(resultSet.next())
 			{
-				user.setId(id);
-				user.setName(resultSet.getString("uname"));
-				user.setLocation(resultSet.getString("location"));
-				user.setPassword(resultSet.getString("passwd"));
-			}
+			user.setId(id);	
+			user.setName(resultSet.getString("uname"));
+			user.setEmail(resultSet.getString("email"));
+			user.setCountry(resultSet.getString("country"));
+			user.setPassword(resultSet.getString("passwd"));
+		    }
+			
 		}
-		catch(Exception e) 
+		catch(SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			//return null;
 		}
 		return user;
 	}
@@ -105,10 +108,10 @@ public class userDAO {
 	public List<User> selectAllUsers()
 	{
 		List<User> users=new ArrayList<User>();
-		userDAO dao =new userDAO();
-		try(Connection connection=dao.getConnection() )
+		UserDAO dao=new UserDAO();
+		try(Connection connection=dao.getConnection())
 		{
-			PreparedStatement  preparedStatement=connection.prepareStatement(SELECT_ALL_USERS);
+			PreparedStatement preparedStatement=connection.prepareStatement(SELECT_ALL_USERS);
 			ResultSet resultSet=preparedStatement.executeQuery();
 			
 			while(resultSet.next())
@@ -116,35 +119,102 @@ public class userDAO {
 				int id=resultSet.getInt("id");
 				String uname=resultSet.getString("uname");
 				String email=resultSet.getString("email");
-				String location= resultSet.getString("location");
+				String country=resultSet.getString("country");
 				String password=resultSet.getString("passwd");
 				
-				user.add(new User(id,uname,location,password));
+				users.add(new User(id,uname,email,country,password));
+	
 			}
+			
 		}
-		catch(Exception e) 
+		catch(SQLException e)
 		{
 			e.printStackTrace();
 		}
+		
 		return users;
-		
-		
-		
 	}
+	
+	
 	public boolean deleteUser(int id)
 	{
-		userDAO dao =new userDAO();
-		try(Connection connection=dao.getConnection() )
+		boolean status=false;
+		UserDAO dao=new UserDAO();
+		try(Connection connection=dao.getConnection())
 		{
-			PreparedStatement  preparedStatement=connection.prepareStatement(DELETE_USERS_SQL);
+			PreparedStatement preparedStatement=connection.prepareStatement(DELETE_USERS_SQL);
 			preparedStatement.setInt(1, id);
 			
 			status=preparedStatement.execute();
+			
 		}
-		catch(Exception e) 
+		catch(SQLException e)
 		{
 			e.printStackTrace();
 		}
+		
 		return status;
 	}
+	
+	
+	public boolean updateUser(User user)
+	{
+		boolean status=false;
+		UserDAO dao=new UserDAO();
+		try(Connection connection=dao.getConnection())
+		{
+			PreparedStatement preparedStatement=connection.prepareStatement(UPDATE_USERS_SQL);
+			preparedStatement.setString(1, user.getName());
+			preparedStatement.setString(2, user.getEmail());
+			preparedStatement.setString(3, user.getCountry());
+			preparedStatement.setInt(4, user.getId());
+			
+			
+			
+			status=preparedStatement.executeUpdate()>0;
+			
+		}
+		catch(SQLException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		return status;
+	}
+	
+   public static void main(String args[])
+   {
+		/*
+		 * UserDAO dao=new UserDAO(); if(dao.getConnection()!=null) {
+		 * System.out.println("Successfully connected to the database!!"); } else {
+		 * System.out.println("Problem in database connection!!"); }
+		 */
+	   
+	   //Data insertion
+	   //User user=new User("test","test@abc.com","India","abc@123");
+	   
+	   //dao.insertUser(user);
+	   
+	   //select data by user id
+	   //User user1=dao.selectUser(1);
+	   //System.out.println(user1);
+	   
+	   //select all users data
+	   //List<User> users=dao.selectAllUsers();
+	   
+		/*
+		 * for(User u:users) { System.out.println(u); }
+		 */
+	  
+	  //Update user
+	   
+	  UserDAO dao=new UserDAO();
+	  User user=dao.selectUser(1);
+	  user.setName("demo");
+	  user.setCountry("demo");
+	  user.setEmail("demo@abc.com");
+	  Boolean status=dao.updateUser(user);
+	  System.out.println(status);
+		   
+   }
 }
